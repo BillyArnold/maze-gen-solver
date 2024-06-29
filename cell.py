@@ -39,3 +39,20 @@ class Cell:
 
         for line in lines:
             self.__win.draw_line(line)
+
+    def draw_move(self, to_cell, undo=False):
+        color = "red"
+        if undo:
+            color = "gray"
+
+        from_x = (self.x1 + self.x2) / 2
+        from_y = (self.y1 + self.y2) / 2
+        to_x = (to_cell.x1 + to_cell.x2) / 2
+        to_y = (to_cell.y1 + to_cell.y2) / 2
+
+        line = Line(
+            Point(from_x, from_y),
+            Point(to_x, to_y)
+        )
+        self.__win.draw_line(line, color)
+
