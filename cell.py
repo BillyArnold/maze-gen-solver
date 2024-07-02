@@ -4,8 +4,8 @@ from point import Point
 class Cell:
     def __init__(
             self, 
-            top_left_point, 
-            bottom_right_point,
+            top_left_point = None, 
+            bottom_right_point = None,
             window,
             has_left_wall = True, 
             has_right_wall = True, 
