@@ -4,9 +4,9 @@ from point import Point
 class Cell:
     def __init__(
             self, 
-            top_left_point = None, 
-            bottom_right_point = None,
             window,
+            top_left_point, 
+            bottom_right_point,
             has_left_wall = True, 
             has_right_wall = True, 
             has_top_wall = True, 
@@ -20,6 +20,7 @@ class Cell:
         self.y1 = top_left_point.y
         self.x2 = bottom_right_point.x
         self.y2 = bottom_right_point.y
+
         self.__win = window
 
     def draw(self):
