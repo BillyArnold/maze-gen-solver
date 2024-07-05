@@ -27,16 +27,27 @@ class Cell:
         lines = []
         if self.has_left_wall:
             left_wall = Line(Point(self.x1, self.y1), Point(self.x1, self.y2))
-            lines.append(left_wall)
+        else:
+            left_wall = Line(Point(self.x1, self.y1), Point(self.x1, self.y2), 'white')
+        lines.append(left_wall)
+
         if self.has_top_wall:
             top_wall = Line(Point(self.x1, self.y1), Point(self.x2, self.y1))
-            lines.append(top_wall)
+        else:
+            top_wall = Line(Point(self.x1, self.y1), Point(self.x2, self.y1), 'white')
+        lines.append(top_wall)
+
         if self.has_right_wall:
             right_wall = Line(Point(self.x2, self.y1), Point(self.x2, self.y2))
-            lines.append(right_wall)
+        else:
+            right_wall = Line(Point(self.x2, self.y1), Point(self.x2, self.y2), 'white')
+        lines.append(right_wall)
+
         if self.has_bottom_wall:
             bottom_wall = Line(Point(self.x1, self.y2), Point(self.x2, self.y2))
-            lines.append(bottom_wall)
+        else:
+            bottom_wall = Line(Point(self.x1, self.y2), Point(self.x2, self.y2), 'white')
+        lines.append(bottom_wall)
 
         for line in lines:
             self.__win.draw_line(line)
