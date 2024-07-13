@@ -28,7 +28,7 @@ class Maze:
 
         self.create_cells()
         self.break_entrance_and_exit()
-        self.break_walls_r()
+        self._break_walls_r(0, 0)
 
     def create_cells(self):
         for i in range(0, self.num_cols):
@@ -56,86 +56,55 @@ class Maze:
                     self.__cells[k][l].has_bottom_wall = False
                     self.__cells[k][l].draw()
 
-    def break_walls_r(self):
-        i, j = 0, 0
-        curr = self.__cells[i][j]
-        
+    def _break_walls_r(self, i, j):
+        self.__cells[i][j].visited = True
         while True:
-            curr.visited = True
-            possible_next = []
+            next_index_list = []
 
-            down_cell = None
-            up_cell = None
-            left_cell = None
-            right_cell = None
+            # determine which cell(s) to visit next
+            # left
+            if i > 0 and not self.__cells[i - 1][j].visited:
+                next_index_list.append((i - 1, j))
+            # right
+            if i < self.num_cols - 1 and not self.__cells[i + 1][j].visited:
+                next_index_list.append((i + 1, j))
+            # up
+            if j > 0 and not self.__cells[i][j - 1].visited:
+                next_index_list.append((i, j - 1))
+            # down
+            if j < self.num_rows - 1 and not self.__cells[i][j + 1].visited:
+                next_index_list.append((i, j + 1))
 
-            if i + 1 < self.num_rows - 1: 
-                down_cell = self.__cells[i + 1][j]
-            if i - 1 >= 0: 
-                up_cell = self.__cells[i - 1][j]
-            if j - 1 >= 0: 
-                left_cell = self.__cells[i][j - 1]
-            if j + 1 < self.num_cols - 1: 
-                right_cell = self.__cells[i][j + 1]
+            # if there is nowhere to go from here
+            # just break out
+            if len(next_index_list) == 0:
+                self.__cells[i][j].draw()
+                return
 
-            if down_cell and down_cell.visited == False:
-                possible_next.append('down')
-            if up_cell and up_cell.visited == False:
-                possible_next.append('up')
-            if left_cell and left_cell.visited == False:
-                possible_next.append('left')
-            if right_cell and right_cell.visited == False:
-                possible_next.append('right')
+            # randomly choose the next direction to go
+            direction_index = random.randrange(len(next_index_list))
+            next_index = next_index_list[direction_index]
 
-            print(possible_next)
+            # knock out walls between this cell and the next cell(s)
+            # right
+            if next_index[0] == i + 1:
+                self.__cells[i][j].has_right_wall = False
+                self.__cells[i + 1][j].has_left_wall = False
+            # left
+            if next_index[0] == i - 1:
+                self.__cells[i][j].has_left_wall = False
+                self.__cells[i - 1][j].has_right_wall = False
+            # down
+            if next_index[1] == j + 1:
+                self.__cells[i][j].has_bottom_wall = False
+                self.__cells[i][j + 1].has_top_wall = False
+            # up
+            if next_index[1] == j - 1:
+                self.__cells[i][j].has_top_wall = False
+                self.__cells[i][j - 1].has_bottom_wall = False
 
-            if len(possible_next) == 0:
-                curr.draw()
-                break
-
-            if len(possible_next) == 1:
-                next_dir_index = 0
-            else:
-                next_dir_index = random.randrange(0, len(possible_next) - 1)
-
-            if possible_next[next_dir_index] == 'down':
-                curr.has_bottom_wall = False
-                curr.draw()
-                down_cell.has_top_wall = False
-                down_cell.draw()
-                next_cell = down_cell
-                next_i = i + 1
-                next_j = j
-            if possible_next[next_dir_index] == 'up':
-                curr.has_bottom_wall = False
-                curr.draw()
-                up_cell.has_top_wall = False
-                up_cell.draw()
-                next_cell = up_cell
-                next_i = i - 1
-                next_j = j
-            if possible_next[next_dir_index] == 'left':
-                curr.has_bottom_wall = False
-                curr.draw()
-                left_cell.has_top_wall = False
-                left_cell.draw()
-                next_cell = left_cell
-                next_i = i
-                next_j = j - 1
-            if possible_next[next_dir_index] == 'right':
-                curr.has_bottom_wall = False
-                curr.draw()
-                right_cell.has_top_wall = False
-                right_cell.draw()
-                next_cell = right_cell
-                next_i = i
-                next_j = j + 1
-
-            i = next_i
-            j = next_j
-            curr = next_cell
-            continue
-            
+            # recursively visit the next cell
+            self._break_walls_r(next_index[0], next_index[1])
 
     def animate(self):
         if self.win is None:
