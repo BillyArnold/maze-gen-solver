@@ -11,6 +11,7 @@ class Cell:
             has_right_wall = True, 
             has_top_wall = True, 
             has_bottom_wall = True, 
+            visited = False,
         ):
         self.has_left_wall = has_left_wall
         self.has_right_wall = has_right_wall
@@ -22,6 +23,7 @@ class Cell:
         self.y2 = bottom_right_point.y
 
         self.__win = window
+        self.visited = visited
 
     def draw(self):
         lines = []
